@@ -1,0 +1,34 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+@model login.Models.LoginModel 
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-4"></div>
+        <div class="col-sm-4">
+            <form class="form-horizontal" asp-action="Index">
+                <div class="form-group">
+                    <label class="control-label">Admin ID</label>
+                    <input asp-for="Email" class="form-control" type="text" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Password</label>
+                    <input asp-for="Pass" class="form-control" type="password" />
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Submit" />
+                </div>
+            </form>
+        </div>
+        <div class="col-sm-4"></div>
+    </div>
+</div>
+@{
+    if (TempData["msg"] != null)
+    {
+        <script>
+            alert('@TempData["msg"]')
+        </script>
+    }
+}
