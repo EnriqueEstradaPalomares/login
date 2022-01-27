@@ -16,11 +16,13 @@ namespace login.Controllers
     public class HomeController : Controller  
     {
         private readonly LoginContext _login;
+        private readonly KColSoftContext _KColSoft;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(LoginContext contexto)
+        public HomeController(LoginContext contexto, KColSoftContext con)
         {
             _login = contexto;
+            _KColSoft = con;
         }
 
         public IActionResult Index()
@@ -44,7 +46,7 @@ namespace login.Controllers
         //}
 
         [HttpPost]
-        public IActionResult Index(LoginModel item)
+        public IActionResult Index(LoginModel item, KColSoftModel kCol)
         {
 
 
@@ -52,8 +54,8 @@ namespace login.Controllers
             {
                 new SqlParameter("@Email",item.Email),
                 new SqlParameter("@Pass",item.Pass),
+                new SqlParameter("@Usuario", item.Email),
             };
-            string cadena = "exec dbo.Loggin "+item.Email+", "+item.Pass+"";
 
             try
             {
@@ -63,7 +65,10 @@ namespace login.Controllers
                     TempData["msg"] = "Usuario o Contrasena incorrectos, intenete otra vez";
                 }
                 else
+                {
                     TempData["msg"] = "Bienvenido";
+                    var res = _KColSoft.KColSoftsItem.FromSqlRaw<KColSoftModel>("exec dbo.RegistroDB @Usuario", param).ToList();
+                }
 
                 return View();
             }
@@ -71,7 +76,7 @@ namespace login.Controllers
             catch (Exception ex)
             {
                 TempData["msg"] = "No encuentro la base de datos";
-                return View();
+                throw;
             }
         }
 
